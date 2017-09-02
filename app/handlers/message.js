@@ -6,6 +6,10 @@ const request = require('request');
 const apiaiApp = require('apiai')(process.env.API_CLIENT_ACCESS_TOKEN);
 const getUserGreeting = require('./util/get_user_greeting');
 
+const decorateEnvResponse = (msg) => {
+    return process.env.ENV === 'live' ? msg : msg + "\n(I am in development)";
+}
+
 let sendMessageApiAi = (event) => {
     console.log(event)
     const sender_id = event.sender.id;
@@ -41,7 +45,7 @@ let sendMessageApiAi = (event) => {
                     method: 'POST',
                     json: {
                         recipient: { id: sender_id },
-                        message: { text: aiText }
+                        message: { text: decorateEnvResponse(aiText) }
                     }
                 }, (error, response) => {
                     if (error) {
