@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 /* App startup */
 let p = new Promise((resolve, reject) => { resolve() });
-p.then(() => db.open('./db/database.sqlite', { Promise }))
+p.then(() => db.open('./db/database.sqlite', { Promise })) // open the database -> change to neo4j
     .then(() => db.migrate({ force: 'last' }))
     .catch(err => console.error(err.stack))
     .then(() => {
@@ -26,3 +26,5 @@ p.then(() => db.open('./db/database.sqlite', { Promise }))
 app.get('/', function (req, res) {
     res.send('Hello Stranger! What brought you here?')
 })
+
+module.exports = app;
