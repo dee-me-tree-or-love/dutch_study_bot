@@ -5,13 +5,14 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "build": "git submodule update && npm install & && cd wordeu-api && npm install"
   },
   "author": "Dmitrii",
   "license": "ISC",
   "dependencies": {
     "apiai": "^4.0.3",
-    "body-parser": "^1.17.2",
+    "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "gulp": "^3.9.1",
@@ -24,6 +25,11 @@
     "npm": "5.x.x"
   },
   "devDependencies": {
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
     "gulp": "^3.9.1"
   }
 }

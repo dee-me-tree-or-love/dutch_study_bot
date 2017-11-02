@@ -1,3 +1,4 @@
 [submodule "wordeu-api"]
 	path = wordeu-api
 	url = git@github.com:dee-me-tree-or-love/wordeu-api.git
+	branch = dev
