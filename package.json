@@ -17,8 +17,8 @@
     "express": "^4.15.4",
     "gulp": "^3.9.1",
     "npmlog": "^4.1.2",
-    "request": "^2.81.0",
-    "sqlite": "^2.8.0"
+    "request": "^2.83.0",
+    "request-promise-native": "^1.0.5"
   },
   "engines": {
     "node": "6.11.2",
@@ -26,10 +26,7 @@
   },
   "devDependencies": {
     "eslint": "^4.10.0",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.4.0",
+    "eslint-config-google": "^0.9.1",
     "gulp": "^3.9.1"
   }
 }
