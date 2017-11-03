@@ -23,7 +23,8 @@ gulp.task('server', function() {
 gulp.task('go', function() {
     gulp.run('server')
 
-    gulp.watch(['./**/*.js'], function() {
+    gulp.watch(['./**/*.js', './app.js'], function() {
+        if (node) node.kill()
         gulp.run('server')
     })
 
