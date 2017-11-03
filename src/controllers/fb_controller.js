@@ -3,18 +3,24 @@ const apiAiSDK = require('apiai')(process.env.DIALOGFLOW_CLIENT_TOKEN);
 
 // TODO: is it actually a controller? maybe 'handler' would be a better name?
 module.exports = class FacebookController {
-  constructor() {
+  constructor(wordeuApiCtrl) {
+    this.wordeu = wordeuApiCtrl;
     this.PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_TOKEN;
     this.MESSENGER_GRAPH_URL = 'https://graph.facebook.com/v2.6/me/messages';
     this.ERROR_PLACEHOLDER = 'Oups, I am going through hard times now (developers having fun), could you repeat?';
     this.MessageProviderTypes = {
       'mirror': this.sendMessageMirror,
       'dialogflow': this.sendMessageAi
-    };  
+    };
   }
 
+  /**
+   * Posts a message (back*) to the chat with the person
+   * @param {*} sender the sender object for facebook
+   * @param {String} text the text string to be sent back
+   */
   postMessage(sender, text) {
-    if(!text){
+    if (!text) {
       // TODO: a debug wrapper is needed again!
       console.log('Empty message was tried to be sent');
       text = this.ERROR_PLACEHOLDER;
