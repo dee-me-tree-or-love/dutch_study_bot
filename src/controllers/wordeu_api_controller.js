@@ -34,6 +34,8 @@ module.exports = class WordeuApiController {
       },
       json: true // Automatically parses the JSON string in the response
     }
+    // could also go with just making a new Promise object 
+    // and inside using regular request library, but huh, this is neat
     return requestPromise(options);
   }
 }

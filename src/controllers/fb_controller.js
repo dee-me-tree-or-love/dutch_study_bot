@@ -6,7 +6,8 @@ module.exports = class FacebookController {
   constructor(wordeuApiCtrl) {
     this.wordeu = wordeuApiCtrl;
     this.PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_TOKEN;
-    this.MESSENGER_GRAPH_URL = 'https://graph.facebook.com/v2.6/me/messages';
+    this.MESSENGER_GRAPH_HOST = 'https://graph.facebook.com/v2.6/';
+    this.MESSENGER_GRAPH_MESSAGES = this.MESSENGER_GRAPH_HOST + 'me/messages';
     this.ERROR_PLACEHOLDER = 'Oups, I am going through hard times now (developers having fun), could you repeat?';
     this.MessageProviderTypes = {
       'mirror': this.sendMessageMirror,
@@ -26,7 +27,7 @@ module.exports = class FacebookController {
       text = this.ERROR_PLACEHOLDER;
     }
     request({
-      url: this.MESSENGER_GRAPH_URL,
+      url: this.MESSENGER_GRAPH_MESSAGES,
       qs: { access_token: this.PAGE_ACCESS_TOKEN },
       method: 'POST',
       json: {
@@ -40,6 +41,38 @@ module.exports = class FacebookController {
         console.log('Error: ', response.body.error);
       }
     });
+  }
+
+  // TODO: actually start using it
+  retrieveUserName(senderId){
+    let p = new Promise((resolve, reject) => {
+      
+              request({
+                  url: this.MESSENGER_GRAPH_HOST + senderId,
+                  qs: {
+                      access_token: this.PAGE_ACCESS_TOKEN,
+                      fields: 'first_name'
+                  },
+                  method: 'GET'
+      
+              }, (err, resp, body) => {
+      
+                  if (resp && body) {
+                      resolve(JSON.parse(body));
+                  } else {
+                      if (err) {
+                          reject(err);
+                      }
+                      reject({ msg: 'not complete result' });
+                  }
+              })
+          }).then((body) => {
+              return body.first_name;
+          }).catch((err) => {
+              console.log('error getting name:', err);
+              return err;
+          });
+      return p;
   }
 
   /**
