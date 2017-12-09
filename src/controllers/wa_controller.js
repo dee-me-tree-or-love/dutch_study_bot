@@ -56,6 +56,7 @@ module.exports = class WordeuApiController {
       },
       body: {
         title: term,
+        page_id: pageId
       },
       json: true
     }
