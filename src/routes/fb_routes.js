@@ -20,11 +20,26 @@ module.exports = (app, ctrls) => {
     console.log('recevied message via fb');
 
     console.log(req.body);
+    let msgCount = 0;
     // TODO: maybe also move to the controller functionality?
     if (req.body.object === 'page') {
-      req.body.entry.forEach((entry) => {
+      // facebookCtrl.retrieveUserName()
+      req.body.entry.forEach((entry) => { // FIXME: this might be a breaking `forEach`
         entry.messaging.forEach((event) => {
           if (event.message && event.message.text) {
+            // if first messsage parsed in sequence
+            if (msgCount == 0) {
+              facebookCtrl.retrieveUserName(event.sender.id)
+                .then((name) => {
+                  return facebookCtrl.wordeuCtrl.ensureUser(event.sender.id, name);
+                })
+                .then((res)=>{
+                  console.log('added user');
+                  console.log(res);
+                })
+                .catch((er) => { console.error(er) });
+            }
+            msgCount++;
             facebookCtrl.sendMessage(event);
           }
         });
