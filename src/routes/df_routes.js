@@ -12,9 +12,10 @@ module.exports = (app, ctrls) => {
   const dialogFlowCtrl = ctrls.DialogFlow();
 
   // handle the dialog flow fulfillment post request
-  app.post(`/${DOMAIN}/webhook/fulfil`, (req, res) => {
+  app.post(`/${DOMAIN}/webhook/fulfill`, (req, res) => {
     console.log('Dialogflow fullfillment route called');
 
     // TODO: add handler logic
+    console.log(req);
   });
 };

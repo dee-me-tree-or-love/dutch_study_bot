@@ -11,8 +11,8 @@ const request = require('request');
 const requestPromise = require('request-promise-native');
 
 module.exports = class WordeuApiController {
-  constructor() {
-    this.HOST = process.env.WORDEU_API_HOST || 'http://localhost:8008/'
+  constructor(host) {
+    this.HOST = host || process.env.WORDEU_API_HOST || 'http://localhost:8008/'
   }
 
   /**
@@ -24,6 +24,7 @@ module.exports = class WordeuApiController {
   ensureUser(pageId, name) {
     // TODO: add some fault correction for the page id
     const options = {
+      method: 'PUT',
       uri: `${this.HOST}users/pid/ensure/${pageId}`,
       headers: {
         'User-Agent': 'WordeuApiController'

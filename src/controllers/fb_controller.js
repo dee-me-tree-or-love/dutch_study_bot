@@ -4,7 +4,8 @@ const apiAiSDK = require('apiai')(process.env.DIALOGFLOW_CLIENT_TOKEN);
 // TODO: is it actually a controller? maybe 'handler' would be a better name?
 module.exports = class FacebookController {
   constructor(wordeuApiCtrl) {
-    this.wordeu = wordeuApiCtrl;
+    // TODO: rename it from ctrl to something else!
+    this.wordeuCtrl = wordeuApiCtrl;
     this.PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_TOKEN;
     this.MESSENGER_GRAPH_HOST = 'https://graph.facebook.com/v2.6/';
     this.MESSENGER_GRAPH_MESSAGES = this.MESSENGER_GRAPH_HOST + 'me/messages';
@@ -44,6 +45,11 @@ module.exports = class FacebookController {
   }
 
   // TODO: actually start using it
+  /**
+   * Request a user name from the facebook api and return a promise
+   * @param {*} senderId 
+   * @returns promise
+   */
   retrieveUserName(senderId){
     let p = new Promise((resolve, reject) => {
       
@@ -114,7 +120,7 @@ module.exports = class FacebookController {
       sessionId: 'gen_mess' // arbitrary
     });
 
-    console.log(apiaiHandler);
+    // console.log(apiaiHandler);
     // when Dialog Flow service sends the valid response back, 
     // we can return it to the user
     apiaiHandler.on('response', (response) => {
