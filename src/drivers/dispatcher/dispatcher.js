@@ -13,13 +13,13 @@ module.exports = class Dispatcher {
    * Receive a new intent and match the registered handler
    * @param {*} intent 
    */
-  receiveIntent(intent){
+  receiveIntent(intent, pageId){
     const action = intent.action; 
     if(intent.actionIncomplete){
-      this.trigger('default', intent);
+      this.trigger('default', intent, pageId);
     }
     // maybe do some extra processing? 
-    return this.trigger(action, intent);
+    return this.trigger(action, intent, pageId);
   }
 
   /**
@@ -44,7 +44,7 @@ module.exports = class Dispatcher {
    * @param {*} handler 
    */
   reg(action, handler) {
-    this.registerHandler(action, hadnler);
+    this.registerHandler(action, handler);
   }
 
 
@@ -53,10 +53,10 @@ module.exports = class Dispatcher {
    * @param {*} action 
    * @param {*} intent 
    */
-  trigger(action, intent){
+  trigger(action, intent, pageId){
     const handler =  this.handlers[action];
     if(handler){
-      return this.handlers[action].handle(intent);
+      return this.handlers[action].handle(intent, pageId);
     }
     // if a handler was not found: 
     throw new Error(`Could not trigger a handler with action key @${action}`);

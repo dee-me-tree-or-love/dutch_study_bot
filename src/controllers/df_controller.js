@@ -14,8 +14,8 @@ module.exports = class DialogFlowController {
    * Calls the driver to do stuff with the intent and returns a message object
    * @param {*} intent 
    */
-  treatIntent(intent){
+  treatIntent(intent, pageId){
     console.log(intentDriver);
-    return intentDriver.getDispatcher().receiveIntent(intent);
+    return intentDriver.getDispatcher().receiveIntent(intent, pageId);
   }
 }

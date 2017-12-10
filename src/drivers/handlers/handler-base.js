@@ -4,10 +4,18 @@ const getNotImplemntedException = () => {
 
 module.exports = class HandlerBase {
   constructor(waDriver) {
+    if (!waDriver) {
+      throw new Error('no wordeu api driver specified!')
+    }
     this.wordeuApiDriver = waDriver;
     this.failedResponse = {
       speech: `Sorry, I couldn't figure it out. I will ask the developer monkeys to fix it up...`,
       displayText: `Sorry, I couldn't figure it out. I will ask the developer monkeys to fix it up...`,
+      source: 'wordeu'
+    };
+    this.failedVerificationResponse = {
+      speech: `Sorry, I couldn't figure it out. Could you make sure your request is meaningful? I can only record one word phrases...`,
+      displayText: `Sorry, I couldn't figure it out. Could you make sure your request is meaningful? I can only record one word phrases...`,
       source: 'wordeu'
     };
   }
@@ -46,7 +54,8 @@ module.exports = class HandlerBase {
 
   /**
    * Performs the actions required to fullfil the request
-   * @param {*} parameters parsed by parse Payload function
+   * @param {Object} parameters - parsed by parse Payload function
+   * @param {string} parameters.pageId - passed along to maintain features
    * @returns {Promise}
    */
   retrieveData(parameters) {
@@ -64,22 +73,33 @@ module.exports = class HandlerBase {
   /**
    * process the intent and execute the required actions to fullfill
    * @param {*} intent 
+   * @param {*} pageId a kinda optional parameter that is used in some cases for API calls
    * @returns {Promise}
    */
-  handle(intent) {
+  handle(intent, pageId) {
+    console.log('Started handling the intent');
     const handler = this;
-    const actions = new Promise((req, res) => {
+    const actions = new Promise((resolve, reject) => {
       const verified = handler.verifyPayload(intent);
       if (!verified) {
-        return handler.prepareFailedMessage(null, intent);
+        console.log('Payload incorrect');
+        resolve(handler.prepareFailedMessage(null, intent));
+        return;
       }
+      console.log('Verified the payload');
       const parameters = handler.parsePayload(intent);
+      parameters.pageId = pageId;
+      console.log('Starting processing the payload');
       return handler.retrieveData(parameters)
         .then((result) => {
-          return handler.prepareResponseMessage(result);
+          console.log('Got the result of processing the payload');
+          console.log(result);
+          resolve(handler.prepareResponseMessage(result));
         })
         .catch((error) => {
-          return handler.prepareFailedMessage(error, intent);
+          console.error('Error while processing the payload');
+          console.log(error);
+          resolve(handler.prepareFailedMessage(error, intent));
         })
     })
     return actions;
@@ -97,8 +117,9 @@ module.exports = class HandlerBase {
     if (error) {
       console.error("An error appeared when retrieving data");
       console.log(error);
+      return this.failedResponse;
     }
     // IDEA: make a function to automatically open issues related to these kind of bugs
-    return this.failedResponse;
+    return this.failedVerificationResponse;
   }
 }

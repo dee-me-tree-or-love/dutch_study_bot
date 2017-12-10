@@ -1,7 +1,7 @@
 const HandlerBase = require('../handler-base.js');
 // each specialized handler HAS to override
 // verify, parse, retrieve, prepare
-module.exports = class DefaultHandler extends HandlerBase {
+module.exports = class NewWordTranslationHandler extends HandlerBase {
   /**
    * Makes sure that the intent matches the structure the handler expects
    * @param {*} intent 

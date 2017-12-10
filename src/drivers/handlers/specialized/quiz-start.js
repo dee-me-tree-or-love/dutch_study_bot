@@ -1,13 +1,12 @@
 const HandlerBase = require('../handler-base.js');
 // each specialized handler HAS to override
 // verify, parse, retrieve, prepare
-module.exports = class NewWordHandler extends HandlerBase {
+
+// quiz.get
+
+module.exports = class QuizStartHandler extends HandlerBase {
   constructor(waDriver) {
     super(waDriver);
-    this.paramTypes = {
-      simple: 0,
-      language: 1,
-    }
   }
 
   /**
@@ -16,8 +15,7 @@ module.exports = class NewWordHandler extends HandlerBase {
    * @returns {boolean} 
    */
   verifyPayload(intent) {
-    // check if term is specified
-    return (intent.parameters.term && intent.parameters.term.trim().split(' ').length==1 );
+    return true; // as there is nothing 
   }
 
   /**
@@ -26,14 +24,7 @@ module.exports = class NewWordHandler extends HandlerBase {
    * @returns {Object} parameters
    */
   parsePayload(intent) {
-
-    let params = { type: this.paramTypes.simple };
-    params.term = intent.parameters.term.trim();
-    if (intent.parameters.language) {
-      params.language = intent.parameters.language;
-      params.type = this.paramTypes.language;
-    }
-    return params;
+    return {}
   }
 
   /**
@@ -42,12 +33,12 @@ module.exports = class NewWordHandler extends HandlerBase {
    * @returns {Promise}
    */
   retrieveData(parameters) {
-    // TODO: implement language specification as well!
     return this.wordeuApiDriver
-      .addLearningWord(parameters.term, parameters.pageId)
+      .getQuizWord(parameters.pageId)
       .then((result) => {
         return {
-          text: 'Great, I have made a new entry in your dictionary! Could you tell how do you translate that?'
+          text: `So, translate this for me than: ${result.title}`,
+          term: result.title
         }
       });
   }
@@ -57,6 +48,12 @@ module.exports = class NewWordHandler extends HandlerBase {
    * @param {*} result 
    */
   prepareResponseMessage(result) {
-    return this.constructMessage(result.text, result.text);
+    let message = this.constructMessage(result.text, result.text);
+    message.contextOut = [{
+      name: 'get-quiz-word-followup',
+      parameters: { quizWord: result.term }
+    }]
+    console.log(message);
+    return message;
   }
 }

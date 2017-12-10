@@ -16,10 +16,13 @@ module.exports = (app, ctrls) => {
   app.post(`/${DOMAIN}/webhook/fulfill`, (req, res) => {
     console.log('Dialogflow fullfillment route called');
     console.log(req.body);
-    // TODO: add handler logic
-    
-    dialogFlowCtrl.treatIntent(req.body.result)
-      .then((result)=>{
+
+    const senderId = req.body.sessionId;
+
+    dialogFlowCtrl.treatIntent(req.body.result, senderId)
+      .then((result) => {
+        console.log("finished treating the intent");
+        console.log(result);
         return res.json(result);
       });
   });
