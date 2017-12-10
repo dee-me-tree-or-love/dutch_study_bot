@@ -17,13 +17,10 @@ module.exports = (app, ctrls) => {
     console.log('Dialogflow fullfillment route called');
     console.log(req.body);
     // TODO: add handler logic
-
-
     
-
-    return res.json({
-      speech: 'it is a test',
-      displayText: 'it is a test',
-      source: 'wordeu'});
+    dialogFlowCtrl.treatIntent(req.body.result)
+      .then((result)=>{
+        return res.json(result);
+      });
   });
 };

@@ -1,6 +1,6 @@
 // IDEA: consider adding middleware to the system here, so that actions like 
 // these also can do something: '<domain>.*'
-class Dispatcher {
+module.exports = class Dispatcher {
 
   constructor(defaultHandler){
     if(!defaultHandler){
@@ -19,7 +19,7 @@ class Dispatcher {
       this.trigger('default', intent);
     }
     // maybe do some extra processing? 
-    this.trigger(action, intent);
+    return this.trigger(action, intent);
   }
 
   /**
@@ -28,8 +28,8 @@ class Dispatcher {
    * @param {*} handler 
    */
   registerHandler(action, handler){
-    const handler = this.handlers[action];
-    if(!handler){
+    const exists = this.handlers[action];
+    if(!exists){
       this.handlers[action] = handler;
     }else{
       // TODO: maybe try instead to allow multiple handler match same action 
@@ -56,8 +56,7 @@ class Dispatcher {
   trigger(action, intent){
     const handler =  this.handlers[action];
     if(handler){
-      this.handlers[action].handle(intent);
-      return;
+      return this.handlers[action].handle(intent);
     }
     // if a handler was not found: 
     throw new Error(`Could not trigger a handler with action key @${action}`);
