@@ -1,16 +1,11 @@
-// TODO: maybe should be moved to the different source root?
-// It is a special case of a controler, so...
-// TODO: maybe make it an sdk for the wordeu-api for JS, so then, 
-// only one implementation would be enouh, and all the extra stuff can
-// either be an extension of the class or added with an open issue in GH
-const request = require('request');
+// IDEA: maybe make it an sdk for the wordeu-api for JS, so then, 
 // in order to return the request promises, this library is used
 // to avoid extra dependencies and keep it to the native promises, this one is 
 // used instead of 'request-promise', which uses BlueBird promises
 // for usage api refer to: https://www.npmjs.com/package/request-promise
 const requestPromise = require('request-promise-native');
 
-module.exports = class WordeuApiController {
+module.exports = class WordeuApiDriver {
   constructor(host) {
     this.HOST = host || process.env.WORDEU_API_HOST || 'http://localhost:8008/'
   }
@@ -27,7 +22,7 @@ module.exports = class WordeuApiController {
       method: 'PUT',
       uri: `${this.HOST}users/pid/ensure/${pageId}`,
       headers: {
-        'User-Agent': 'WordeuApiController'
+        'User-Agent': 'WordeuApiDriver'
       },
       body: {
         name: name,
@@ -52,10 +47,11 @@ module.exports = class WordeuApiController {
       method: 'POST',
       uri: `${this.HOST}words/new`,
       headers: {
-        'User-Agent': 'WordeuApiController'
+        'User-Agent': 'WordeuApiDriver'
       },
       body: {
         title: term,
+        page_id: pageId
       },
       json: true
     }
@@ -69,7 +65,7 @@ module.exports = class WordeuApiController {
           method: 'POST',
           uri: `${this.HOST}users/pid/${pageId}/add/word`,
           headers: {
-            'User-Agent': 'WordeuApiController'
+            'User-Agent': 'WordeuApiDriver'
           },
           body: {
             targetTitle: res.title,

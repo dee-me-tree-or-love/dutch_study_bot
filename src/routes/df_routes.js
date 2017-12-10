@@ -11,11 +11,16 @@ module.exports = (app, ctrls) => {
   // initialize the dialogflow controller
   const dialogFlowCtrl = ctrls.DialogFlow();
 
+  // TODO: adapt one route definition approach: trailing slash or not
   // handle the dialog flow fulfillment post request
   app.post(`/${DOMAIN}/webhook/fulfill`, (req, res) => {
     console.log('Dialogflow fullfillment route called');
-
+    console.log(req.body);
     // TODO: add handler logic
-    console.log(req);
+    
+    dialogFlowCtrl.treatIntent(req.body.result)
+      .then((result)=>{
+        return res.json(result);
+      });
   });
 };

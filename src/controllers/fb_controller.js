@@ -3,9 +3,7 @@ const apiAiSDK = require('apiai')(process.env.DIALOGFLOW_CLIENT_TOKEN);
 
 // TODO: is it actually a controller? maybe 'handler' would be a better name?
 module.exports = class FacebookController {
-  constructor(wordeuApiCtrl) {
-    // TODO: rename it from ctrl to something else!
-    this.wordeuCtrl = wordeuApiCtrl;
+  constructor() {
     this.PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_TOKEN;
     this.MESSENGER_GRAPH_HOST = 'https://graph.facebook.com/v2.6/';
     this.MESSENGER_GRAPH_MESSAGES = this.MESSENGER_GRAPH_HOST + 'me/messages';

@@ -1,3 +1,4 @@
+const wordeuDriver = new (require('../drivers/wa-driver.js'))();
 const DOMAIN = 'facebook';
 
 module.exports = (app, ctrls) => {
@@ -31,7 +32,7 @@ module.exports = (app, ctrls) => {
             if (msgCount == 0) {
               facebookCtrl.retrieveUserName(event.sender.id)
                 .then((name) => {
-                  return facebookCtrl.wordeuCtrl.ensureUser(event.sender.id, name);
+                  return wordeuDriver.ensureUser(event.sender.id, name);
                 })
                 .then((res)=>{
                   console.log('added user');

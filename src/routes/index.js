@@ -1,4 +1,5 @@
 const facebookRoutes = require('./fb_routes.js');
+const dialogflowRoutes = require('./df_routes.js');
 
 // the call to the routes index function
 module.exports = {
@@ -6,5 +7,6 @@ module.exports = {
     // TODO: change to self describing endpoint here
     app.get('/', (req, res) => res.send(`It looks like this item doesn't work here...`));
     facebookRoutes(app, controllers);
+    dialogflowRoutes(app, controllers);
   }
 };
