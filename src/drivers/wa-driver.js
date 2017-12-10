@@ -134,4 +134,21 @@ module.exports = class WordeuApiDriver {
     }
     return requestPromise(get);
   }
+
+  submitQuizAnswer(quizWord, answer, pageId){
+    const put = {
+      method: 'PUT',
+      uri: `${this.HOST}quiz/quiz-word/answer/`,
+      headers: {
+        'User-Agent': 'WordeuApiDriver'
+      },
+      body: {
+        quiz_word: quizWord,
+        answer: answer,
+        page_id: pageId
+      },
+      json: true
+    }
+    return requestPromise(put);
+  }
 }
