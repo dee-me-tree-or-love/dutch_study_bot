@@ -1,7 +1,7 @@
 const HandlerBase = require('../handler-base.js');
 // each specialized handler HAS to override
 // verify, parse, retrieve, prepare
-module.exports = class NewWordHandler extends HandlerBase {
+module.exports = class NewWordTranslationHandler extends HandlerBase {
   constructor(waDriver) {
     super(waDriver);
     this.paramTypes = {
@@ -17,7 +17,9 @@ module.exports = class NewWordHandler extends HandlerBase {
    */
   verifyPayload(intent) {
     // check if term is specified
-    return (intent.parameters.term && intent.parameters.term.trim().split(' ').length==1 );
+    return (intent.parameters.translation // new term is supplied
+      && intent.parameters.translation.trim().split(' ').length==1 // the term is 1 word
+      && intent.contexts[0].parameters.term); // context is available
   }
 
   /**
@@ -28,7 +30,8 @@ module.exports = class NewWordHandler extends HandlerBase {
   parsePayload(intent) {
 
     let params = { type: this.paramTypes.simple };
-    params.term = intent.parameters.term.trim();
+    params.translation = intent.parameters.translation;
+    params.term = intent.contexts[0].parameters.term;
     if (intent.parameters.language) {
       params.language = intent.parameters.language;
       params.type = this.paramTypes.language;
@@ -44,10 +47,10 @@ module.exports = class NewWordHandler extends HandlerBase {
   retrieveData(parameters) {
     // TODO: implement language specification as well!
     return this.wordeuApiDriver
-      .addLearningWord(parameters.term, parameters.pageId)
+      .addWordTranslation(parameters.translation, parameters.term, parameters.pageId)
       .then((result) => {
         return {
-          text: 'Great, I have made a new entry in your dictionary! Could you tell how do you translate that?'
+          text: `Great! now I have recorded that ${parameters.translation} translates ${parameters.term}`
         }
       });
   }

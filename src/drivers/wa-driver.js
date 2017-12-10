@@ -37,7 +37,6 @@ module.exports = class WordeuApiDriver {
 
   /**
    * Creates a new word entry in the wordeu database and connects it to the user
-   * FIXME: this approach kinda sucks because this could be done in one API call
    * @param {*} term 
    * @param {*} pageId 
    * @returns {Promise} a promise chain as explained in definition 
@@ -76,5 +75,63 @@ module.exports = class WordeuApiDriver {
         return requestPromise(link);
       })
     return p;
+  }
+
+  /**
+   * Creates a new word entry in the wordeu database and connects it to the user
+   * @param {*} term 
+   * @param {*} pageId 
+   * @returns {Promise} a promise chain as explained in definition 
+   */
+  addWordTranslation(translation, term, pageId) {
+    const create = {
+      method: 'POST',
+      uri: `${this.HOST}words/new`,
+      headers: {
+        'User-Agent': 'WordeuApiDriver'
+      },
+      body: {
+        title: translation,
+        page_id: pageId
+      },
+      json: true
+    }
+
+    // localhost:8008/users/pid/121/add/word
+
+    const p = requestPromise(create)
+      .then((res) => {
+        // FIXME: this is rather insecure
+        const link = {
+          method: 'POST',
+          uri: `${this.HOST}words/relation/create`,
+          headers: {
+            'User-Agent': 'WordeuApiDriver'
+          },
+          body: {
+            rootTitle: res.title,
+            targetTitle: term,
+            relationType: 'translates'
+          },
+          json: true
+        }
+        return requestPromise(link);
+      })
+    return p;
+  }
+
+  getQuizWord(pageId){
+    const get = {
+      method: 'GET',
+      uri: `${this.HOST}quiz/quiz-word/`,
+      headers: {
+        'User-Agent': 'WordeuApiDriver'
+      },
+      body: {
+        page_id: pageId
+      },
+      json: true
+    }
+    return requestPromise(get);
   }
 }

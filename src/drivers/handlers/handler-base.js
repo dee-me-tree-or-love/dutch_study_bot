@@ -4,13 +4,18 @@ const getNotImplemntedException = () => {
 
 module.exports = class HandlerBase {
   constructor(waDriver) {
-    if(!waDriver){
+    if (!waDriver) {
       throw new Error('no wordeu api driver specified!')
     }
     this.wordeuApiDriver = waDriver;
     this.failedResponse = {
       speech: `Sorry, I couldn't figure it out. I will ask the developer monkeys to fix it up...`,
       displayText: `Sorry, I couldn't figure it out. I will ask the developer monkeys to fix it up...`,
+      source: 'wordeu'
+    };
+    this.failedVerificationResponse = {
+      speech: `Sorry, I couldn't figure it out. Could you make sure your request is meaningful? I can only record one word phrases...`,
+      displayText: `Sorry, I couldn't figure it out. Could you make sure your request is meaningful? I can only record one word phrases...`,
       source: 'wordeu'
     };
   }
@@ -78,7 +83,8 @@ module.exports = class HandlerBase {
       const verified = handler.verifyPayload(intent);
       if (!verified) {
         console.log('Payload incorrect');
-        return handler.prepareFailedMessage(null, intent);
+        resolve(handler.prepareFailedMessage(null, intent));
+        return;
       }
       console.log('Verified the payload');
       const parameters = handler.parsePayload(intent);
@@ -111,8 +117,9 @@ module.exports = class HandlerBase {
     if (error) {
       console.error("An error appeared when retrieving data");
       console.log(error);
+      return this.failedResponse;
     }
     // IDEA: make a function to automatically open issues related to these kind of bugs
-    return this.failedResponse;
+    return this.failedVerificationResponse;
   }
 }

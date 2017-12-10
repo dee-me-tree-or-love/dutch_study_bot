@@ -1,13 +1,12 @@
 const HandlerBase = require('../handler-base.js');
 // each specialized handler HAS to override
 // verify, parse, retrieve, prepare
-module.exports = class NewWordHandler extends HandlerBase {
+
+// quiz.answer
+
+module.exports = class QuizAnswerHandler extends HandlerBase {
   constructor(waDriver) {
     super(waDriver);
-    this.paramTypes = {
-      simple: 0,
-      language: 1,
-    }
   }
 
   /**
@@ -16,8 +15,11 @@ module.exports = class NewWordHandler extends HandlerBase {
    * @returns {boolean} 
    */
   verifyPayload(intent) {
-    // check if term is specified
-    return (intent.parameters.term && intent.parameters.term.trim().split(' ').length==1 );
+    console.log(intent.contexts);
+     // check if term is specified
+     return (intent.parameters.answer // new term is supplied
+      && intent.parameters.answer.trim().split(' ').length==1 // the term is 1 word
+      && intent.contexts[0].parameters.term); // context is available
   }
 
   /**
@@ -26,14 +28,7 @@ module.exports = class NewWordHandler extends HandlerBase {
    * @returns {Object} parameters
    */
   parsePayload(intent) {
-
-    let params = { type: this.paramTypes.simple };
-    params.term = intent.parameters.term.trim();
-    if (intent.parameters.language) {
-      params.language = intent.parameters.language;
-      params.type = this.paramTypes.language;
-    }
-    return params;
+    return {}
   }
 
   /**
@@ -42,12 +37,11 @@ module.exports = class NewWordHandler extends HandlerBase {
    * @returns {Promise}
    */
   retrieveData(parameters) {
-    // TODO: implement language specification as well!
     return this.wordeuApiDriver
-      .addLearningWord(parameters.term, parameters.pageId)
+      .getQuizWord(parameters.pageId)
       .then((result) => {
         return {
-          text: 'Great, I have made a new entry in your dictionary! Could you tell how do you translate that?'
+          text: `YAY`
         }
       });
   }

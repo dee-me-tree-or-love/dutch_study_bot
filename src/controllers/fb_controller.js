@@ -125,6 +125,7 @@ module.exports = class FacebookController {
       // get the fulfillment from the DF service
       console.log('Received dialogflow response');
       console.log(response.result);
+      
       let aiText = response.result.fulfillment.speech;
       this.postMessage(sender, aiText);
     });
