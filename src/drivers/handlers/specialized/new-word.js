@@ -3,7 +3,7 @@ const HandlerBase = require('../handler-base.js');
 // verify, parse, retrieve, prepare
 module.exports = class DefaultHandler extends HandlerBase {
   constructor(waDriver) {
-    super (waDriver);
+    super(waDriver);
     this.paramTypes = {
       simple: 0,
       language: 1,
@@ -27,9 +27,9 @@ module.exports = class DefaultHandler extends HandlerBase {
    */
   parsePayload(intent) {
 
-    let params = {type: this.paramTypes.simple};
+    let params = { type: this.paramTypes.simple };
     params.term = intent.parameters.term;
-    if(intent.parameters.language){
+    if (intent.parameters.language) {
       params.language = intent.parameters.language;
       params.type = this.paramTypes.language;
     }
@@ -42,7 +42,14 @@ module.exports = class DefaultHandler extends HandlerBase {
    * @returns {Promise}
    */
   retrieveData(parameters) {
-    return { text: parameters.speech };
+    // TODO: implement language specification as well!
+    return this.wordeuApiDriver
+      .addLearningWord(parameters.term, parameters.pageId)
+      .then((result) => {
+        return {
+          text: 'Great, I have made a new entry in your dictionary! Could you tell how do you translate that?'
+        }
+      });
   }
 
   /**
