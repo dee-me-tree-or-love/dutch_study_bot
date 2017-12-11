@@ -45,12 +45,7 @@ module.exports = class QuizAnswerHandler extends HandlerBase {
         return result;
       });
   }
-
-  // { best_match: { word: 'sandwich', similarity: 0.8888888888888888 },
-  // answer: 'sandwhich',
-  // score: 6,
-  // options: [ { word: 'sandwich', similarity: 0.8888888888888888 } ] }
-
+  
   /**
    * Based on the result prepares the answer a chatbot should send back to the user
    * @param {*} result 
