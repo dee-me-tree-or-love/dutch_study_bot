@@ -55,8 +55,6 @@ module.exports = class WordeuApiDriver {
       json: true
     }
 
-    // localhost:8008/users/pid/121/add/word
-
     const p = requestPromise(create)
       .then((res) => {
         // FIXME: this is rather insecure
@@ -96,8 +94,6 @@ module.exports = class WordeuApiDriver {
       },
       json: true
     }
-
-    // localhost:8008/users/pid/121/add/word
 
     const p = requestPromise(create)
       .then((res) => {
