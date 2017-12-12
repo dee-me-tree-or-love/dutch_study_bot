@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "build": "git submodule update --init && npm install & && cd wordeu-api && npm install"
+    "build": "echo \"Info: no build script required\""
   },
   "author": "Dmitrii",
   "license": "ISC",
